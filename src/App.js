@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navbar from "./component/Navbar"
+import Landing from "./component/searchPage/Landing"
+import UserList from "./component/UserList"
 
-function App() {
+const App = () => {
+  const [userList,setUserList] = React.useState([])
+
+  const addMovie = (movieInfo) =>{
+    setUserList([...userList,movieInfo.movieData])
+  }
+
+  const removeMovie = (movieInfo) =>{
+    setUserList([...userList,movieInfo.movieData])
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <Router>
+     <div>
+       <Navbar/>
+       <Route exact path="/" render={() => <Landing addMovie = {addMovie}/>} />
+       <Route exact path="/list" render={() => <UserList movieList = {userList} removeMovie = {removeMovie}/>}/>
+       <Route exact path="/account" render={() => <Landing/>}/>
+     </div>
+   </Router>
   );
 }
 
