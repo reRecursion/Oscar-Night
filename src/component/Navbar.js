@@ -1,7 +1,7 @@
 import { Grid } from "@material-ui/core"
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
@@ -19,8 +19,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MovieFilterIcon from '@material-ui/icons/MovieFilter';
-import { Link} from "react-router-dom";
-import SimpleMenu from "./AppBarComponent/SimpleMenu";
+import { Link } from "react-router-dom";
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Button from '@material-ui/core/Button';
 
 const drawerWidth = 240;
 
@@ -79,21 +82,38 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
-  logo: {
-    width: 50,
-    height: 50
-  },
   title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+    marginRight: theme.spacing(15),
+  },
+  search: {
     display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    marginLeft: 0,
+    marginRight: theme.spacing(2),
+    width: '55%',
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+    
+  },  
+  divider: {
+    height: 38,
+    margin: 4,
   },
 }));
+
 
 export default function LoginHeader() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [input, setInput] = React.useState("")
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -102,6 +122,11 @@ export default function LoginHeader() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const onChangeInput = (e) => {
+    e.preventDefault();
+    setInput(e.target.value.split(' ').join('+'))
+  }
 
   return (
     <div className={classes.root}>
@@ -113,18 +138,28 @@ export default function LoginHeader() {
         })}
       >
         <Toolbar>
-          <Grid container justify="space-between" alignItems="center">
-            <IconButton edge="start" onClick={handleDrawerOpen} className={clsx(classes.menuButton, open && classes.hide)} color="inherit" aria-label="menu">
-              <MenuIcon fontSize="large" />
-            </IconButton>
-            <div className={classes.title}>
-              <MovieFilterIcon fontSize="large" />
-              <Typography variant="h4" className={classes.typographyStyle}>
-                Oscar Night
-                </Typography>
-            </div>
-            <SimpleMenu />
-          </Grid>
+          <IconButton edge="start" onClick={handleDrawerOpen} className={clsx(classes.menuButton, open && classes.hide)} color="inherit" aria-label="menu">
+            <MenuIcon fontSize="large" />
+          </IconButton>
+          <Typography variant="h5" noWrap className={classes.title}>
+            Oscar Night
+          </Typography>
+          <Paper component="form" className={classes.search}>
+            <InputBase
+              className={classes.input}
+              placeholder="Enter Movie Title Here!"
+              inputProps={{ 'aria-label': 'search google maps' }}
+              onChange={onChangeInput}
+            />
+            <Divider className={classes.divider} orientation="vertical" />
+            <Link to={"/result/"+input} >
+              <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                <SearchIcon />
+              </IconButton>
+            </Link>
+          </Paper>
+          <div style = {{flexGrow: 1}}/>
+          <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>
       <Drawer
@@ -143,13 +178,13 @@ export default function LoginHeader() {
         </div>
         <Divider />
         <List>
-          <ListItem button component={Link}  to = "/">
+          <ListItem button component={Link} to="/">
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
-          <ListItem button component={Link} to = "/list">
+          <ListItem button component={Link} to="/list">
             <ListItemIcon>
               <MailIcon />
             </ListItemIcon>

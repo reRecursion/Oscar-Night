@@ -7,7 +7,7 @@ const Content = (props) => {
     const getMovieData = movieData=> {
         return(
             <Grid item xs={12} sm={3} alignItems="center">
-                <MovieCard movieData = {movieData} addMovie = {props.addMovie}/>
+                <MovieCard movieData = {movieData} addMovie = {props.addMovie} checkAdded={props.checkAdded}/>
             </Grid>
         )
     }

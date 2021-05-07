@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import StarIcon from '@material-ui/icons/Star';
 import { Grid } from "@material-ui/core"
 import { DataGrid } from '@material-ui/data-grid';
+import Button from '@material-ui/core/Button';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const columns = [
     { field: 'id', headerName: 'Rank', width: 100 },
     { field: 'Title', headerName: 'Title', width: 550 },
-    {field: 'Year',headerName: 'Year',width: 160},
-    { field: 'new', headerName: '', width: 130 },
+    { field: 'Year', headerName: 'Year', width: 160 },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -27,10 +27,19 @@ const useStyles = makeStyles((theme) => ({
 
 
 const UserList = (props) => {
-    const classes = useStyles(); 
+    const classes = useStyles();
     let count = 1
+    const [selected, setSelected] = useState([])
 
-    props.movieList.forEach((e)=>{
+    const onClickRow = (e) => {
+        if (selected.includes(e.data.id)){
+            setSelected(selected.filter(item => item !== e.data.id))
+        }else{
+            setSelected([...selected,e.data.id])
+        }
+    }
+
+    props.movieList.forEach((e) => {
         e.id = count
         count++
     })
@@ -38,10 +47,32 @@ const UserList = (props) => {
     return (
         <Grid container>
             <Grid item xs={false} sm={2} />
-            <Grid item container direction="column" justify="center" alignItems="center" xs={12} sm={8}>
-                <div style={{ height: 400, width: '100%' }}>
-                    <DataGrid rows={props.movieList} columns={columns} pageSize={5} checkboxSelection />
-                </div>
+            <Grid item container direction="column" justify="center" alignItems="flex-end" xs={12} sm={8} spacing={2}>
+                <Grid item style={{ height: 400, width: '100%' }}>
+                    <DataGrid onRowSelected={onClickRow} rows={props.movieList} columns={columns} pageSize={5} checkboxSelection />
+                </Grid>
+                <Grid item >
+                    {selected.length>0
+                    ?(<Button
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<DeleteIcon />}
+                        onClick={() => props.removeMovie(selected)}
+                    >
+                        Delete Selected
+                    </Button>)
+                    :(<Button
+                        disabled
+                        variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        startIcon={<DeleteIcon />}
+                    >
+                        Delete
+                    </Button>)
+                    }
+                </Grid>
             </Grid>
             <Grid item xs={false} sm={2} />
         </Grid>

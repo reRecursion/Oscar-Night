@@ -13,19 +13,23 @@ const useStyles = makeStyles((theme) => ({
         height: 345,
     },
     watchButton: {
-        width : "140px",
+        width: "140px",
         height: "40px"
     }
 
 }));
 
 const MovieCard = (props) => {
-    let {Poster,Title, Year} = props.movieData
+    let { Poster, Title, Year } = props.movieData
     const classes = useStyles();
+    let added = false
 
+    if (Poster == "N/A") {
+        Poster = "/noImage.jpg"
+    }
 
-    if (Poster == "N/A"){
-        Poster = "noImage.jpg"
+    if(props.checkAdded(props)){
+        added =true
     }
 
     return (
@@ -43,9 +47,14 @@ const MovieCard = (props) => {
                 </Typography>
                 <Box m={1} pt={1}>
                     <Grid container justify="center">
-                        <Button onClick = {() => props.addMovie(props)} variant="outlined" className={classes.watchButton}>
+                        {added
+                        ?(<Button disabled variant="outlined" className={classes.watchButton}>
+                            Added
+                         </Button>)
+                        :(<Button onClick={() => props.addMovie(props)} variant="outlined" className={classes.watchButton}>
                             Add to list
-                        </Button>
+                        </Button>)
+                        }
                     </Grid>
                 </Box>
             </CardContent>
