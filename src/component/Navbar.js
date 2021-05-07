@@ -100,8 +100,8 @@ const useStyles = makeStyles((theme) => ({
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    
-  },  
+
+  },
   divider: {
     height: 38,
     margin: 4,
@@ -152,14 +152,14 @@ export default function LoginHeader() {
               onChange={onChangeInput}
             />
             <Divider className={classes.divider} orientation="vertical" />
-            <Link to={"/result/"+input} >
+            <Link to={"/result/" + input} >
               <IconButton type="submit" className={classes.iconButton} aria-label="search">
                 <SearchIcon />
               </IconButton>
             </Link>
           </Paper>
-          <div style = {{flexGrow: 1}}/>
-          <Button color="inherit">Login</Button>
+          <div style={{ flexGrow: 1 }} />
+          {/* <Button color="inherit">Login</Button> */}
         </Toolbar>
       </AppBar>
       <Drawer
