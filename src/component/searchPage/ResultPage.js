@@ -38,7 +38,7 @@ const ResultPage = (props) => {
     const [url, setUrl] = useState("")
 
     const classes = useStyles();
-    const api = "http://www.omdbapi.com/?apikey=9912c3ff&type=movie&s="
+    const api = "https://www.omdbapi.com/?apikey=9912c3ff&type=movie&s="
     const pageStr = "&page="
 
     useEffect(() => {
