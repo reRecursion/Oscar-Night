@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import SearchIcon from '@material-ui/icons/Search';
 import { Grid, Typography } from "@material-ui/core"
 import Content from "./Content"
 import Button from '@material-ui/core/Button';
@@ -33,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
 const ResultPage = (props) => {
     const {input} = useParams();
     const [contentData, setContentData] = useState([])
-    const [loaded, setLoaded] = useState(false)
+    const [loaded, setLoaded] = useState(true)
     const [pageNum, setPageNum] = useState(2)
     const [url, setUrl] = useState("")
 
@@ -103,7 +98,7 @@ const ResultPage = (props) => {
                     <Typography> There are no results with the entered title</Typography>
                 </Grid>)
             }
-            {contentData.length >= 0 &&
+            {contentData.length >= ((pageNum-1)*10) &&
             <Button onClick={onClickLoadMore} variant="outlined" size="large" color="primary" >
                 Load More 
             </Button>}

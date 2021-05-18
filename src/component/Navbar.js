@@ -1,5 +1,5 @@
 import { Grid } from "@material-ui/core"
-import React from 'react';
+import React,{useState} from 'react';
 import clsx from 'clsx';
 import { fade, makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,14 +16,18 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import MovieFilterIcon from '@material-ui/icons/MovieFilter';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import HomeIcon from '@material-ui/icons/Home';
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { auth, firestore } from '../FirebaseKey'
 
 const drawerWidth = 240;
 
@@ -109,11 +113,54 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function LoginHeader() {
+const SimpleMenu = () =>{
+  const [anchorEl, setAnchorEl] = useState();
+  const history = useHistory()
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const onProfileClick = (e) => {
+    e.preventDefault();
+    history.push("/profile")
+  };
+
+  const onLogoutClick = (e) => {
+    auth.signOut()
+    history.push("/")
+  };
+
+  return (
+    <div>
+      <IconButton aria-controls="simple-menu" onClick={handleClick}>
+        <AccountCircleIcon fontSize="large" style={{fill: "white"}}/>
+      </IconButton>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={onProfileClick}>My account</MenuItem>
+        <MenuItem onClick={onLogoutClick}>Logout</MenuItem>
+      </Menu>
+    </div>
+  );
+}
+
+
+const LoginHeader = () => {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [input, setInput] = React.useState("")
+  const [open, setOpen] = useState(false);
+  const [input, setInput] = useState("")
+  const [user] = useAuthState(auth)
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -159,7 +206,10 @@ export default function LoginHeader() {
             </Link>
           </Paper>
           <div style={{ flexGrow: 1 }} />
-          {/* <Button color="inherit">Login</Button> */}
+          {user
+          ?(<SimpleMenu/>)
+          :(<Button component={Link} to="/login" color="inherit">Login</Button>
+          )}
         </Toolbar>
       </AppBar>
       <Drawer
@@ -178,15 +228,15 @@ export default function LoginHeader() {
         </div>
         <Divider />
         <List>
-          <ListItem button component={Link} to="/">
+          <ListItem button component={Link} to="/home">
             <ListItemIcon>
-              <InboxIcon />
+              <HomeIcon/>
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
           <ListItem button component={Link} to="/list">
             <ListItemIcon>
-              <MailIcon />
+              <ListAltIcon/>
             </ListItemIcon>
             <ListItemText primary="YourList" />
           </ListItem>
@@ -202,3 +252,5 @@ export default function LoginHeader() {
     </div>
   );
 }
+
+export default LoginHeader

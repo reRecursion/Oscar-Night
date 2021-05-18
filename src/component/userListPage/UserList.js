@@ -6,8 +6,7 @@ import Button from '@material-ui/core/Button';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const columns = [
-    { field: 'id', headerName: 'Rank', width: 100 },
-    { field: 'Title', headerName: 'Title', width: 550 },
+    { field: 'Title', headerName: 'Title', width: 750 },
     { field: 'Year', headerName: 'Year', width: 160 },
 ];
 
@@ -49,7 +48,13 @@ const UserList = (props) => {
             <Grid item xs={false} sm={2} />
             <Grid item container direction="column" justify="center" alignItems="flex-end" xs={12} sm={8} spacing={2}>
                 <Grid item style={{ height: 400, width: '100%' }}>
-                    <DataGrid onRowSelected={onClickRow} rows={props.movieList} columns={columns} pageSize={5} checkboxSelection />
+                    <DataGrid 
+                        onRowSelected={onClickRow} 
+                        rows={props.movieList} 
+                        columns={columns} 
+                        pageSize={5} 
+                        checkboxSelection
+                        selectionModel = {selected} />
                 </Grid>
                 <Grid item >
                     {selected.length>0
@@ -58,9 +63,12 @@ const UserList = (props) => {
                         color="secondary"
                         className={classes.button}
                         startIcon={<DeleteIcon />}
-                        onClick={() => props.removeMovie(selected)}
+                        onClick={() => { 
+                            setSelected([])
+                            props.removeMovie(selected)
+                        }}
                     >
-                        Delete Selected
+                        Delete
                     </Button>)
                     :(<Button
                         disabled
